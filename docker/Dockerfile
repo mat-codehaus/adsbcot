@@ -1,5 +1,6 @@
 # Download base image ubuntu 22.04
-FROM ubuntu:22.04
+FROM --platform=$BUILDPLATFORM ubuntu:22.04
+
 
 # LABEL about the custom image
 LABEL description="ADS-B to TAK Gateway."
@@ -7,20 +8,16 @@ LABEL description="ADS-B to TAK Gateway."
 # Disable Prompt During Packages Installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Update Ubuntu Software repository
-RUN apt update
-RUN apt upgrade -y
-RUN apt install -y python3
-RUN apt install -y python3-pip
-RUN apt install -y python3-numpy
-RUN apt install -y python3-zmq
-RUN apt install -y python3-cryptography
-RUN apt install -y rtl-sdr
-
-# Install Python modules
-RUN python3 -m pip install asyncinotify
-RUN python3 -m pip install pymodes
-RUN python3 -m pip install pyrtlsdr
+# Update Ubuntu Software repository and install Python modules
+RUN apt update && apt upgrade -y && apt install -y \
+    python3 \
+    python3-pip \
+    python3-numpy \
+    python3-zmq \
+    python3-cryptography \
+    rtl-sdr && \
+    python3 -m pip install asyncinotify pymodes pyrtlsdr && \
+    apt clean && rm -rf /var/lib/apt/lists/*
 
 # Build adsbcot
 COPY . /adsbcot/

@@ -1,5 +1,5 @@
 # Download base image ubuntu 22.04
-FROM --platform=$BUILDPLATFORM ubuntu:22.04
+FROM --platform=$TARGETPLATFORM ubuntu:22.04
 
 # LABEL about the custom image
 LABEL description="ADS-B to TAK Gateway."
